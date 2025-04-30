@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soy Ağacı</title>
+    <!-- OrgChartJS Kütüphanesi -->
+    <script src="https://balkan.app/js/OrgChart.js"></script>
+    <script src="script.js"></script>
+    <style>
+        #chart-container {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ccc;
+        }
+        .form-container {
+            margin: 20px;
+        }
+        .form-container input, .form-container select, .form-container button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Soy Ağacı</h1>
+
+    <!-- Grafik Kapsayıcısı -->
+    <div id="chart-container"></div>
+
+    <!-- Kök Kişi Ekleme Formu -->
+    <div class="form-container">
+        <h3>Kök Kişi Ekle</h3>
+        <input type="number" id="rootId" placeholder="ID">
+        <input type="text" id="rootName" placeholder="Ad">
+        <input type="text" id="rootBirthDate" placeholder="Doğum Tarihi (YYYY-MM-DD)">
+        <select id="rootGender">
+            <option value="Erkek">Erkek</option>
+            <option value="Kadın">Kadın</option>
+        </select>
+        <button onclick="addRootPerson()">Kök Kişi Ekle</button>
+    </div>
+
+    <!-- Eş Ekleme Formu -->
+    <div class="form-container">
+        <h3>Eş Ekle</h3>
+        <input type="number" id="personId" placeholder="Kişi ID">
+        <input type="number" id="spouseId" placeholder="Eş ID">
+        <input type="text" id="spouseName" placeholder="Eş Adı">
+        <input type="text" id="spouseBirthDate" placeholder="Doğum Tarihi (YYYY-MM-DD)">
+        <select id="spouseGender">
+            <option value="Erkek">Erkek</option>
+            <option value="Kadın">Kadın</option>
+        </select>
+        <button onclick="addSpouse()">Eş Ekle</button>
+    </div>
+
+    <!-- Çocuk Ekleme Formu -->
+    <div class="form-container">
+        <h3>Çocuk Ekle</h3>
+        <input type="number" id="parentId" placeholder="Ebeveyn ID">
+        <input type="number" id="childId" placeholder="Çocuk ID">
+        <input type="text" id="childName" placeholder="Çocuk Adı">
+        <input type="text" id="childBirthDate" placeholder="Doğum Tarihi (YYYY-MM-DD)">
+        <select id="childGender">
+            <option value="Erkek">Erkek</option>
+            <option value="Kadın">Kadın</option>
+        </select>
+        <button onclick="addChild()">Çocuk Ekle</button>
+    </div>
+
+    <!-- Kişi Silme Formu -->
+    <div class="form-container">
+        <h3>Kişi Sil</h3>
+        <input type="number" id="removePersonId" placeholder="Silinecek Kişi ID">
+        <button onclick="removePerson()">Kişi Sil</button>
+    </div>
+
+    <script>script.js </script>
+</body>
+</html>
