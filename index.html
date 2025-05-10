@@ -1,80 +1,138 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soy Ağacı</title>
-    <!-- OrgChartJS Kütüphanesi -->
-    <script src="https://balkan.app/js/OrgChart.js"></script>
-    <script src="script.js"></script>
+    <title>Aile Ağacı Uygulaması</title>
+    <script src="https://balkan.app/js/FamilyTree.js"></script>
     <style>
-        #chart-container {
-            width: 100%;
-            height: 600px;
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            margin: 0;
+            padding: 20px;
+        }
+        #form-container {
+            width: 300px;
+            padding: 20px;
+            border-right: 1px solid #ccc;
+        }
+        #tree-container {
+            flex-grow: 1;
+            height: 60vh;
             border: 1px solid #ccc;
+            margin-left: 20px;
         }
-        .form-container {
-            margin: 20px;
+        #text-tree-container {
+            flex-grow: 1;
+            height: 30vh;
+            border: 1px solid #ccc;
+            margin-left: 20px;
+            overflow-y: auto;
+            white-space: pre;
+            font-family: monospace;
         }
-        .form-container input, .form-container select, .form-container button {
-            margin: 5px;
+        .form-section {
+            margin-bottom: 20px;
+        }
+        .form-section label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-section input, .form-section select, .form-section button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <h1>Soy Ağacı</h1>
+    <div id="form-container">
+        <div class="form-section">
+            <h3>Kök Kişi Ekle</h3>
+            <label>ID:</label>
+            <input type="number" id="root-id" required>
+            <label>Ad:</label>
+            <input type="text" id="root-name" required>
+            <label>Doğum Tarihi:</label>
+            <input type="text" id="root-birthdate" placeholder="YYYY-MM-DD">
+            <label>Cinsiyet:</label>
+            <select id="root-gender">
+                <option value="Erkek">Erkek</option>
+                <option value="Kadın">Kadın</option>
+            </select>
+            <button onclick="addRootPerson()">Kök Kişi Ekle</button>
+        </div>
 
-    <!-- Grafik Kapsayıcısı -->
-    <div id="chart-container"></div>
+        <div class="form-section">
+            <h3>Eş Ekle</h3>
+            <label>Kişi ID:</label>
+            <input type="number" id="spouse-person-id" required>
+            <label>Eş ID:</label>
+            <input type="number" id="spouse-id" required>
+            <label>Ad:</label>
+            <input type="text" id="spouse-name" required>
+            <label>Doğum Tarihi:</label>
+            <input type="text" id="spouse-birthdate" placeholder="YYYY-MM-DD">
+            <label>Cinsiyet:</label>
+            <select id="spouse-gender">
+                <option value="Erkek">Erkek</option>
+                <option value="Kadın">Kadın</option>
+            </select>
+            <button onclick="addSpouse()">Eş Ekle</button>
+        </div>
 
-    <!-- Kök Kişi Ekleme Formu -->
-    <div class="form-container">
-        <h3>Kök Kişi Ekle</h3>
-        <input type="number" id="rootId" placeholder="ID">
-        <input type="text" id="rootName" placeholder="Ad">
-        <input type="text" id="rootBirthDate" placeholder="Doğum Tarihi (YYYY-MM-DD)">
-        <select id="rootGender">
-            <option value="Erkek">Erkek</option>
-            <option value="Kadın">Kadın</option>
-        </select>
-        <button onclick="addRootPerson()">Kök Kişi Ekle</button>
+        <div class="form-section">
+            <h3>Çocuk Ekle</h3>
+            <label>Ebeveyn ID:</label>
+            <input type="number" id="child-parent-id" required>
+            <label>Çocuk ID:</label>
+            <input type="number" id="child-id" required>
+            <label>Ad:</label>
+            <input type="text" id="child-name" required>
+            <label>Doğum Tarihi:</label>
+            <input type="text" id="child-birthdate" placeholder="YYYY-MM-DD">
+            <label>Cinsiyet:</label>
+            <select id="child-gender">
+                <option value="Erkek">Erkek</option>
+                <option value="Kadın">Kadın</option>
+            </select>
+            <button onclick="addChild()">Çocuk Ekle</button>
+        </div>
+
+        <div class="form-section">
+            <h3>Kişi Sil</h3>
+            <label>ID:</label>
+            <input type="number" id="remove-id" required>
+            <button onclick="removePerson()">Kişi Sil</button>
+        </div>
+
+        <div class="form-section">
+            <h3>Ağacı Yazdır</h3>
+            <button onclick="printTree()">Ağacı Ekrana Yazdır</button>
+        </div>
+
+        <div id="error-message" class="error"></div>
     </div>
 
-    <!-- Eş Ekleme Formu -->
-    <div class="form-container">
-        <h3>Eş Ekle</h3>
-        <input type="number" id="personId" placeholder="Kişi ID">
-        <input type="number" id="spouseId" placeholder="Eş ID">
-        <input type="text" id="spouseName" placeholder="Eş Adı">
-        <input type="text" id="spouseBirthDate" placeholder="Doğum Tarihi (YYYY-MM-DD)">
-        <select id="spouseGender">
-            <option value="Erkek">Erkek</option>
-            <option value="Kadın">Kadın</option>
-        </select>
-        <button onclick="addSpouse()">Eş Ekle</button>
+    <div id="tree-container">
+        <div id="tree"></div>
     </div>
+    <div id="text-tree-container"></div>
 
-    <!-- Çocuk Ekleme Formu -->
-    <div class="form-container">
-        <h3>Çocuk Ekle</h3>
-        <input type="number" id="parentId" placeholder="Ebeveyn ID">
-        <input type="number" id="childId" placeholder="Çocuk ID">
-        <input type="text" id="childName" placeholder="Çocuk Adı">
-        <input type="text" id="childBirthDate" placeholder="Doğum Tarihi (YYYY-MM-DD)">
-        <select id="childGender">
-            <option value="Erkek">Erkek</option>
-            <option value="Kadın">Kadın</option>
-        </select>
-        <button onclick="addChild()">Çocuk Ekle</button>
-    </div>
-
-    <!-- Kişi Silme Formu -->
-    <div class="form-container">
-        <h3>Kişi Sil</h3>
-        <input type="number" id="removePersonId" placeholder="Silinecek Kişi ID">
-        <button onclick="removePerson()">Kişi Sil</button>
-    </div>
-
-    <script>script.js </script>
+    <script src="app.js"></script>
 </body>
 </html>
